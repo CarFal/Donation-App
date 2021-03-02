@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         messenger_check = (CheckBox)findViewById(R.id.messenger_check);
         messages_check = (CheckBox)findViewById(R.id.messages_check);
         amount = (EditText) findViewById(R.id.amount);
-
+        DataBaseManager.buildDbManager(this);
 
 
         donate.setOnClickListener(new View.OnClickListener() {
@@ -84,8 +85,10 @@ public class MainActivity extends AppCompatActivity {
                 if (!shared)
                     sharing="";
                 int a = Integer.parseInt(amount.getText().toString());
-                currentDonation = new Donations(pType,a,sharingArray);
+                currentDonation = new Donations(0,pType,a,sharingArray);
                 donationsArrayList.add(currentDonation);
+                //Save it to the database.
+                DataBaseManager.insertDonation(currentDonation);
                 builder.setMessage("Thanks for your " +payment + " payment with amount " + a +sharing )
                         .setCancelable(true)
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -98,6 +101,8 @@ public class MainActivity extends AppCompatActivity {
                 alert.show();
             }
         });
+
+
     }
 
     @Override

@@ -3,20 +3,34 @@ package com.example.donationappv2;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
+@Entity
 public class Donations implements Parcelable {
 
+    @PrimaryKey(autoGenerate = true)
+    public int id;
+
     int paymentMethod; // 1 for credit and 2 for paypal
+    @ColumnInfo(name = "donAmount")
     double amount;
+
+    @Ignore
     int[] sharingApps;
 
-
-    public Donations(int paymentMethod, double amount, int[] sharingApps) {
+    public Donations(){};
+    public Donations(int id, int paymentMethod, double amount, int[] sharingApps) {
+        this.id = id;
         this.paymentMethod = paymentMethod;
         this.amount = amount;
         this.sharingApps = sharingApps;
     }
 
     protected Donations(Parcel in) {
+        id = in.readInt();
         paymentMethod = in.readInt();
         amount = in.readDouble();
         sharingApps = in.createIntArray();
@@ -41,6 +55,7 @@ public class Donations implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
         dest.writeInt(paymentMethod);
         dest.writeDouble(amount);
         dest.writeIntArray(sharingApps);
